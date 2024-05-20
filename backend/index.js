@@ -9,6 +9,17 @@ const upload = multer({ dest: 'uploads/' });
 
 app.use(bodyParser.json());
 
+
+app.get('/projects', async (req, res) => {
+    const projects = await Project.findAll();
+    res.json(projects);
+});
+
+app.get('/projects/:id', async (req, res) => {
+    const project = await Project.findByPk(req.params.id);
+    res.json(project);
+});
+
 app.listen(3000, () => {
     console.log('Backend running on port 3000');
 });
