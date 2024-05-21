@@ -2,8 +2,11 @@ const { Worker, Queue, QueueScheduler } = require('bullmq');
 const IORedis = require('ioredis');
 const { Project } = require('../models');
 const { uploadToS3, extractTextFromPDF, generateEmbeddings } = require('../utils/index.js');
+require('dotenv').config();
 
-const connection = new IORedis({
+const redisUri = process.env.REDIS_URL
+// Create a Redis connection
+const connection = new IORedis(redisUri, {
     maxRetriesPerRequest: null,
     enableReadyCheck: false // Optional, can be helpful to disable the ready check for faster start
 });
