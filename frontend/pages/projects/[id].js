@@ -17,7 +17,7 @@ export default function Project() {
     const [answer, setAnswer] = useState('');
 
     const handleAsk = async () => {
-        const { data } = await axios.post(`http://localhost:3000/projects/${id}/ask`, { question });
+        const { data } = await axios.post(`http://localhost:3001/projects/${id}/ask`, { question });
         setAnswer(data.answer);
     };
 
