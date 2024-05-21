@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const { Project } = require('./models/project');
+const { Project } = require('./models');
 const { processPDF } = require('./workers/pdfWorker');
 
 const app = express();
@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.post('/projects', upload.single('pdf'), async (req, res) => {
     const { title, description } = req.body;
     const pdfUrl = req.file.path;
-
     const project = await Project.create({ title, description, pdfUrl, status: 'creating' });
 
     processPDF(project.id);
