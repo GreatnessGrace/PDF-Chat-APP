@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import React from 'react';
+import { useRouter } from 'next/router';
 
 const fetchProjects = async () => {
     const { data } = await axios.get('http://localhost:3001/projects');
@@ -8,9 +9,15 @@ const fetchProjects = async () => {
 };
 
 export default function Projects() {
+    const router = useRouter();
     const { data, error, isLoading } = useQuery('projects', fetchProjects);
+
     if (isLoading) return <div className="flex items-center justify-center h-screen">Loading...</div>;
     if (error) return <div className="flex items-center justify-center h-screen">Error loading projects, {error.message}</div>;
+
+    const handleRowClick = (id) => {
+        router.push(`/projects/${id}`);
+    };
 
     return (
         <div className='items-center justify-center  bg-gray-100 p-4'>
@@ -24,7 +31,11 @@ export default function Projects() {
                 </div>
                 <div>
                     {data.map(project => (
-                        <div key={project.id} className="grid grid-cols-8 gap-4 py-2 px-2 border-b border-gray-200 hover:bg-gray-100">
+                        <div 
+                            key={project.id} 
+                            className="grid grid-cols-8 gap-4 py-2 px-2 border-b border-gray-200 hover:bg-gray-100 cursor-pointer"
+                            onClick={() => handleRowClick(project.id)}
+                        >
                             <div className="col-span-1 text-gray-900">{project.id}</div>
                             <div className="col-span-2 text-gray-900">{project.title}</div>
                             <div className="col-span-3 text-gray-700 truncate">{project.description}</div>
