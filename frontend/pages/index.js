@@ -13,7 +13,7 @@ export default function Home() {
         formData.append('description', description);
         formData.append('pdf', file);
 
-        await axios.post('http://localhost:3000/projects', formData);
+        await axios.post('http://localhost:3001/projects', formData);
     };
 
     return (
