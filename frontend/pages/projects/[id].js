@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState } from 'react';
 
 const fetchProject = async (id) => {
-    const { data } = await axios.get(`http://localhost:3000/projects/${id}`);
+    const { data } = await axios.get(`http://localhost:3001/projects/${id}`);
     return data;
 };
 
