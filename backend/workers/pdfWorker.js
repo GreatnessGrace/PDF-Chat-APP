@@ -1,6 +1,8 @@
 const { Worker, Queue, QueueScheduler } = require('bullmq');
 const IORedis = require('ioredis');
-const { Project } = require('../models');
+// const  Project  = require('../models/project.js');
+const { Project } = require('../models'); // Correctly import the Project model
+
 const { uploadToS3, extractTextFromPDF, generateEmbeddings } = require('../utils/index.js');
 require('dotenv').config();
 
@@ -28,6 +30,7 @@ const pdfWorker = new Worker(queueName, async job => {
         project.status = 'created';
         await project.save();
     } catch (error) {
+        console.log("error----",error)
         project.status = 'failed';
         await project.save();
     }
