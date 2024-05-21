@@ -29,9 +29,9 @@ export default function Project() {
             <div className="container mx-auto w-full max-w-4xl p-6 bg-white shadow-lg rounded-lg">
                 <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Ask me Anything?</h1>
                 <div className="container mx-auto p-4">
-                    <h1 className="text-2xl font-bold">Title: {data.title}</h1>
-                    <p>Description: {data.description}</p>
-                    <p>Status: {data.status}</p>
+                    <h1 className="text-2xl font-bold flex items-center justify-center m-2">Title: {data.title}</h1>
+                    <p className='flex items-center justify-center m-2'>Description: {data.description}</p>
+                    <p className={`flex items-center justify-center m-2 col-span-2 font-semibold ${data.status === 'created' ? 'text-green-500' : 'text-red-500'}`}>Status: {data.status}</p>
 
                     {data.status === 'created' && (
                         <div className='mb-4 flex items-center'>
