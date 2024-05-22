@@ -21,36 +21,36 @@ export default function Project() {
         setAnswer(data.answer);
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error loading project</div>;
+    if (isLoading) return <div className="flex items-center justify-center h-screen bg-gray-100">Loading...</div>;
+    if (error) return <div className="flex items-center justify-center h-screen bg-gray-100">Error loading project</div>;
 
     return (
-        <div className='flex items-center justify-center bg-gray-100 p-4'>
+        <div className='flex items-center justify-center min-h-screen bg-gray-100 p-4'>
             <div className="container mx-auto w-full max-w-4xl p-6 bg-white shadow-lg rounded-lg">
                 <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Ask me Anything?</h1>
                 <div className="container mx-auto p-4">
-                    <h1 className="text-2xl font-bold flex items-center justify-center m-2">Title: {data.title}</h1>
-                    <p className='flex items-center justify-center m-2'>Description: {data.description}</p>
-                    <p className={`flex items-center justify-center m-2 col-span-2 font-semibold ${data.status === 'created' ? 'text-green-500' : 'text-red-500'}`}>Status: {data.status}</p>
+                    <h1 className="text-2xl font-bold text-center mb-4">Project Title: {data?.title}</h1>
+                    <p className='text-center mb-4'>Project Description: {data?.description}</p>
+                    <p className={`text-center mb-4 font-semibold ${data?.status === 'created' ? 'text-green-500' : 'text-red-500'}`}>Status: {data?.status}</p>
 
-                    {data.status === 'created' && (
-                        <div className='mb-4 flex items-center'>
+                    {data?.status === 'created' && (
+                        <div className='mb-4 flex items-center justify-center'>
                             <input
-                                className='mt-1 p-2 border border-gray-300 rounded-md w-full'
+                                className='mt-1 p-2 border border-gray-300 rounded-md w-full max-w-md'
                                 type="text"
                                 placeholder="Ask a question"
                                 value={question}
                                 onChange={(e) => setQuestion(e.target.value)}
                             />
                             <button
-                                className='ml-2 mt-1 p-2 py-2 px-4 bg-black text-white rounded-md hover:bg-gray-800'
+                                className='ml-2 mt-1 p-2 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700'
                                 onClick={handleAsk}
                             >
                                 Ask
                             </button>
                         </div>
                     )}
-                    {answer && <p className='mt-4'>Answer: {answer}</p>}
+                    {answer && <p className='mt-4 text-center'>Answer: {answer}</p>}
                 </div>
             </div>
         </div>
