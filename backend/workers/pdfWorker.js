@@ -30,7 +30,7 @@ const pdfWorker = new Worker(queueName, async job => {
         project.status = 'created';
         await project.save();
     } catch (error) {
-        console.log("error----",error)
+        // console.log("error----",error)
         project.status = 'failed';
         await project.save();
     }
