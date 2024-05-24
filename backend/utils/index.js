@@ -23,11 +23,9 @@ const uploadToS3 = async (filePath, fileName) => {
 };
 
 const extractTextFromPDF = async (pdfPath) => {
-    // const pdfjsLib = await import('pdfjs-dist');
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs'); // Ensure correct path
 
-    // console.log("pdfjsLib",pdfjsLib)
-    // console.log("pdfjsLib.getDocument(pdfPath)",pdfjsLib.getDocument(pdfPath))
+    
     const loadingTask = pdfjsLib.getDocument(pdfPath);
     const pdf = await loadingTask.promise;
     let text = '';
@@ -41,60 +39,42 @@ const extractTextFromPDF = async (pdfPath) => {
     return text;
 };
 
-// const generateEmbeddings = async (text) => {
-//     const response = await axios.post('YOUR_LLM_API_URL', { text });
-//     console.log("response", response)
-//     console.log("response.data", response.data)
-//     console.log("response.data.embeddings", response.data.embeddings)
-//     return response.data.embeddings;
-// };
 
-// const generateEmbeddings = async (text) => {
-//     console.log("key-----",process.env.OPEN_AI_KEY)
-//     try {
-//         const response = await axios.post('https://api.openai.com/v1/embeddings', {
-//             model: 'text-embedding-3-small', 
-//             inputs: text,
-//         }, {
-//             headers: {
-//                 'Authorization': `Bearer ${process.env.OPEN_AI_KEY}`, 
-//                 'Content-Type': 'application/json',
-//             },
-//         });
-//         // console.log("response.data----",response.data);
-//         return response.data;
-//     } catch (error) {
-//         console.error("Error generating embeddings:", error.response.data);
-//         throw error;
-//     }
-// };
+
+
 const generateEmbeddings = async (text) => {
     try {
-        const maskedText = text.replace(`${process.env.AI_KEY}`, '[MASK]');
-        
-        // Truncate or split input text if it exceeds maximum sequence length
-        const truncatedText = maskedText.slice(0, 512); 
-        const response = await axios.post('https://api-inference.huggingface.co/models/bert-base-uncased', {
-            inputs: truncatedText,
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.AI_KEY}`, 
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Caught error:", error);
-        if (error.response && error.response.data && error.response.data.error === 'Model google-bert/bert-base-uncased is currently loading') {
-            console.log(`Model is still loading. Estimated time: ${error.response.data.estimated_time} seconds`);
-            // You can wait for the estimated time and retry the request here
-            // Alternatively, you can implement a retry mechanism with exponential backoff
-        } else {
-            console.error("Error generating embeddings:", error.response.data);
-            throw error;
+        text = ' OBJECTIVE Experienced Software Engineer specializing in fullstack development utilizing Node.js and Angular with a proven track record, actively seeking opportunities to contribute expertise and further advance my career in the realm ofsoftware development.'
+        let retries = 3;
+        while (retries > 0) {
+            const response = await axios.post(
+                'https://api-inference.huggingface.co/models/deepset/roberta-base-squad2',
+                {
+                    inputs: text,
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${process.env.AI_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response.status === 503) {
+                console.log(`Model is loading. Retrying in 10 seconds... (Retries left: ${retries})`);
+                retries -= 1;
+                await new Promise(res => setTimeout(res, 10000));
+            } else {
+                return response.data;
+            }
         }
+    } catch (error) {
+        console.error("Error generating embeddings:", error.response ? error.response.data : error.message);
     }
+    return null;
 };
+
+
 
 
 module.exports = { uploadToS3, extractTextFromPDF, generateEmbeddings };
