@@ -3,3 +3,4 @@ package-lock.json
 .env
 redis.js
 uploads
+docker-compose.yml
